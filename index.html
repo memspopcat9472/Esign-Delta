@@ -3,346 +3,422 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIGG REG</title>
+    <title>MIGG REG - Menu</title>
     <style>
-        /* Base Setup */
+        /* Reset and Base Styles */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Arial Black', Impact, sans-serif;
+            font-family: 'Arial Black', 'Impact', sans-serif;
             user-select: none;
         }
 
         body {
-            background-color: #050505;
+            background-color: #030303;
             color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
-            background-image: radial-gradient(circle, #111 10%, #050505 90%);
+            background-image: 
+                radial-gradient(circle at center, rgba(20, 20, 20, 0.8) 0%, #030303 100%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 16px 16px, 16px 16px;
         }
 
-        /* Main Container matching the UI Aspect */
-        .wrapper {
+        /* Main Menu Window Frame */
+        .menu-frame {
             position: relative;
-            width: 800px;
-            height: 500px;
-            background-color: #000000;
+            width: 860px;
+            height: 580px;
+            background: #000000;
             border: 2px solid #1a1a1a;
+            padding: 30px 40px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            padding: 20px;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.95), inset 0 0 20px rgba(255, 255, 255, 0.02);
         }
 
-        /* Side Text (GOD & DISCORD) */
+        /* Vertical Decorative Side Texts */
         .side-text-left {
             position: absolute;
             left: 15px;
-            bottom: 20px;
+            bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .side-text-left .word {
             writing-mode: vertical-lr;
             text-transform: uppercase;
             font-size: 14px;
-            letter-spacing: 4px;
-            color: #555;
+            letter-spacing: 6px;
+            color: #666666;
+            font-weight: 900;
+        }
+        .side-text-left .icon-box {
+            width: 24px;
+            height: 24px;
+            border: 1px solid #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #666;
         }
 
         .side-text-right {
             position: absolute;
             right: 15px;
-            bottom: 20px;
+            bottom: 30px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+        }
+        .side-text-right .word {
+            writing-mode: vertical-lr;
             text-transform: uppercase;
             font-size: 14px;
-            letter-spacing: 2px;
-            color: #555;
-            writing-mode: vertical-lr;
-        }
-
-        .discord-icon {
-            width: 20px;
-            height: 20px;
-            fill: #555;
-            transform: rotate(90deg);
-        }
-
-        /* Header / Metallic Typography */
-        .header {
-            text-align: center;
-            margin-top: 10px;
-            width: 100%;
-        }
-
-        .main-title {
-            font-size: 64px;
-            font-style: italic;
             letter-spacing: 5px;
+            color: #666666;
+            font-weight: 900;
+        }
+        .side-text-right .discord-svg {
+            width: 22px;
+            height: 22px;
+            fill: #666666;
+        }
+
+        /* Header Area Styling */
+        .menu-header {
+            width: 100%;
+            text-align: center;
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .title-migg {
+            font-size: 82px;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            background: linear-gradient(to bottom, #ffffff 0%, #e1e1e1 40%, #a1a1a1 60%, #ffffff 100%);
+            line-height: 0.85;
+            background: linear-gradient(to bottom, 
+                #ffffff 0%, 
+                #f0f0f0 25%, 
+                #9c9e9f 45%, 
+                #727475 50%, 
+                #cccccc 55%, 
+                #ffffff 80%, 
+                #a3a3a3 100%
+            );
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.8));
-            line-height: 0.9;
+            filter: drop-shadow(0px 3px 5px rgba(0, 0, 0, 0.9));
         }
 
-        .sub-title {
-            font-size: 24px;
-            font-style: italic;
-            letter-spacing: 8px;
-            color: #ffffff;
-            border-top: 3px solid #ffffff;
-            display: inline-block;
-            padding: 0 40px;
+        .divider-ribbon {
+            position: relative;
+            width: 100%;
+            height: 18px;
             margin-top: 5px;
+            background: #ffffff;
+            clip-path: polygon(0 40%, 15% 0, 85% 0, 100% 40%, 85% 100%, 15% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Center Grid Layout */
-        .content-container {
+        .title-reg {
+            font-size: 26px;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: 12px;
+            color: #000000;
+            padding-left: 12px;
+            line-height: 1;
+            text-transform: uppercase;
+        }
+
+        /* Control Panels Grid Container */
+        .panels-container {
             display: flex;
-            gap: 20px;
-            width: 90%;
-            height: 240px;
+            width: 100%;
+            height: 280px;
+            gap: 25px;
             justify-content: center;
             align-items: center;
+            margin: 20px 0;
         }
 
-        /* Left Main Panel */
-        .panel-main {
-            flex: 3;
+        /* Left Main Panel Layout */
+        .panel-inject-features {
+            flex: 2.8;
             height: 100%;
-            border: 2px solid #333;
-            background: linear-gradient(135deg, #0d0d0d 0%, #050505 100%);
+            border: 1px solid #2d2d2d;
+            background: linear-gradient(135deg, #0b0b0b 0%, #040404 100%);
             display: flex;
-            padding: 20px;
+            padding: 25px;
             position: relative;
+            border-radius: 4px;
         }
 
-        .section-inject {
+        .panel-column-left {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            border-right: 1px solid #222;
-            padding-right: 10px;
+            border-right: 1px solid #1f1f1f;
+            padding-right: 15px;
         }
 
-        .section-logo {
-            flex: 1.2;
+        .panel-column-right {
+            flex: 1.1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-            padding-left: 10px;
+            gap: 20px;
+            padding-left: 15px;
         }
 
-        /* Right Clear Panel */
-        .panel-clear {
-            flex: 0.8;
+        /* Right Clear Panel Layout */
+        .panel-clear-actions {
+            flex: 0.9;
             height: 100%;
-            border: 2px solid #333;
-            background: linear-gradient(135deg, #0d0d0d 0%, #050505 100%);
-            border-radius: 8px;
+            border: 1px solid #2d2d2d;
+            background: linear-gradient(135deg, #0b0b0b 0%, #040404 100%);
+            border-radius: 6px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            padding: 20px 10px;
+            padding: 25px 15px;
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Regedit Icon Styling */
-        .regedit-container {
-            width: 80px;
-            height: 80px;
+        .watermark-x {
+            position: absolute;
+            font-size: 160px;
+            color: #0f0f0f;
+            font-weight: 900;
+            font-style: italic;
+            line-height: 1;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Image Containers & App Icons styling */
+        .icon-wrapper-regedit {
+            width: 105px;
+            height: 105px;
+            background: linear-gradient(180deg, rgba(40,40,40,0.6) 0%, rgba(15,15,15,0.8) 100%);
+            border: 1px solid #3a3a3a;
+            border-radius: 20px;
             display: flex;
-            justify-content: center;
             align-items: center;
-            filter: drop-shadow(0 0 8px rgba(0, 120, 212, 0.4));
+            justify-content: center;
+            padding: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.1);
         }
 
-        /* Buttons Styling */
-        .btn {
+        .icon-wrapper-regedit img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.4));
+        }
+
+        .icon-garena-brand {
+            width: 110px;
+            height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-garena-brand img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0px 0px 12px rgba(255, 50, 50, 0.3));
+        }
+
+        /* Interactive Buttons */
+        .btn-action {
+            width: 100%;
             background: #ffffff;
             color: #000000;
             border: none;
-            padding: 8px 24px;
-            font-size: 18px;
+            padding: 10px 15px;
+            font-size: 19px;
+            font-weight: 900;
             font-style: italic;
-            font-weight: bold;
+            text-transform: uppercase;
             border-radius: 6px;
             cursor: pointer;
-            width: 85%;
             text-align: center;
-            box-shadow: inset 0 -3px 0 #b5b5b5;
+            box-shadow: inset 0 -3px 0 #b0b0b0, 0 4px 10px rgba(0,0,0,0.3);
             transition: all 0.1s ease;
+            position: relative;
+            z-index: 2;
         }
 
-        .btn:active {
-            transform: scale(0.98);
-            background: #e0e0e0;
+        .btn-action:active {
+            transform: scale(0.97);
+            background: #e5e5e5;
+            box-shadow: inset 0 -1px 0 #b0b0b0, 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .btn-action:disabled {
+            background: #444444 !important;
+            color: #aaaaaa !important;
+            box-shadow: none !important;
+            cursor: not-allowed;
         }
 
         .btn-clear {
             background: transparent;
-            color: #aaaaaa;
-            border: 2px solid #444;
+            color: #8c8c8c;
+            border: 2px solid #333333;
             box-shadow: none;
-            width: 90%;
-            font-size: 14px;
+            font-size: 15px;
+            width: 95%;
         }
-        
+
         .btn-clear:hover {
-            color: #fff;
-            border-color: #666;
+            color: #ffffff;
+            border-color: #555555;
+            background: rgba(255,255,255,0.02);
         }
 
-        /* Static Texts inside panels */
-        .ff-text {
-            font-size: 16px;
+        .label-brand-sub {
+            font-size: 17px;
             font-style: italic;
-            color: #888;
+            font-weight: 900;
+            color: #aaaaaa;
             letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
-        .clear-title-x {
-            font-size: 56px;
-            color: #1a1a1a;
-            font-style: italic;
-            line-height: 1;
-            margin-top: 15px;
+        .menu-footer {
+            width: 100%;
+            text-align: center;
         }
 
-        /* Footer */
-        .footer-text {
-            font-size: 12px;
+        .footer-shop-link {
+            font-size: 13px;
+            font-weight: 900;
             letter-spacing: 3px;
             color: #ffffff;
-            margin-bottom: 5px;
             text-transform: uppercase;
+            opacity: 0.8;
         }
 
-        /* Utility Class for Counting/Status UI */
-        .status-pulse {
-            animation: pulse 1s infinite alternate;
-            color: #ff3b30 !important;
+        .loading-pulse {
+            animation: pulseState 0.5s infinite alternate;
         }
-
-        @keyframes pulse {
-            from { opacity: 0.6; }
-            to { opacity: 1; }
+        @keyframes pulseState {
+            from { opacity: 0.7; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
 <body>
 
-    <div class="wrapper">
-        <div class="side-text-left">GOD</div>
+    <div class="menu-frame">
+        
+        <div class="side-text-left">
+            <div class="word">GOD</div>
+            <div class="icon-box">&#x2328;</div>
+        </div>
 
         <div class="side-text-right">
-            DISCORD
-            <svg class="discord-icon" viewBox="0 0 127.14 96.36">
+            <div class="word">DISCORD</div>
+            <svg class="discord-svg" viewBox="0 0 127.14 96.36">
                 <path d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.86,54.65,1,77.53A105.73,105.73,0,0,0,32,96.36a74.37,74.37,0,0,0,6.72-10.93,68.6,68.6,0,0,1-10.64-5.12c.91-.67,1.81-1.37,2.65-2.1a75.22,75.22,0,0,0,72.86,0c.84.73,1.74,1.43,2.65,2.1a68.86,68.86,0,0,1-10.64,5.12,74.74,74.74,0,0,0,6.72,10.93,105.73,105.73,0,0,0,31.05-18.83C129.92,50.7,124.16,27.78,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.87,46,53.87,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,84.69,40.36,96.11,46,96.11,53,91,65.69,84.69,65.69Z"/>
             </svg>
         </div>
 
-        <div class="header">
-            <div class="main-title">MIGG</div>
-            <div class="sub-title">REG</div>
+        <div class="menu-header">
+            <div class="title-migg">MIGG</div>
+            <div class="divider-ribbon">
+                <div class="title-reg">REG</div>
+            </div>
         </div>
 
-        <div class="content-container">
+        <div class="panels-container">
             
-            <div class="panel-main">
-                
-                <div class="section-inject">
-                    <div class="regedit-container">
-                        <svg viewBox="0 0 64 64" width="70" height="70">
-                            <path d="M12 36 L28 28 L28 46 L12 54 Z" fill="#005A9E" />
-                            <path d="M28 28 L44 36 L44 54 L28 46 Z" fill="#0078D4" />
-                            <path d="M12 36 L28 28 L44 36 L28 44 Z" fill="#2Bb8FF" />
-                            
-                            <path d="M28 16 L44 8 L44 26 L28 34 Z" fill="#005A9E" />
-                            <path d="M44 8 L60 16 L60 34 L44 26 Z" fill="#0078D4" />
-                            <path d="M28 16 L44 8 L60 16 L44 24 Z" fill="#2Bb8FF" />
-
-                            <g transform="translate(-6, -10)">
-                                <path d="M16 20 L26 15 L26 25 L16 30 Z" fill="#D83B01" />
-                                <path d="M26 15 L36 20 L36 30 L26 25 Z" fill="#F14F21" />
-                                <path d="M16 20 L26 15 L36 20 L26 25 Z" fill="#F85A3F" />
-                            </g>
-                        </svg>
+            <div class="panel-inject-features">
+                <div class="panel-column-left">
+                    <div class="icon-wrapper-regedit">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Windows_11_registry_editor_icon.svg" alt="Registry Editor">
                     </div>
-                    <button class="btn" id="injectBtn">INJECT</button>
+                    <button class="btn-action" id="actionInjectBtn">INJECT</button>
                 </div>
 
-                <div class="section-logo">
-                    <svg width="90" height="90" viewBox="0 0 100 100" fill="none">
-                        <path d="M85,30 C75,15 50,10 35,25 C25,35 22,50 28,62 C22,55 18,45 20,35 C12,48 10,65 22,78 C35,92 60,95 78,82 C92,70 95,48 85,30 Z" fill="url(#silverGradient)" />
-                        <path d="M68,45 C62,38 50,35 42,42 C36,48 35,58 40,65 C35,58 35,50 40,45 C32,52 32,65 42,72 C50,78 62,75 68,65 C72,58 72,50 68,45 Z" fill="#111" opacity="0.7"/>
-                        <defs>
-                            <linearGradient id="silverGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#ffffff" />
-                                <stop offset="50%" stop-color="#a1a1a1" />
-                                <stop offset="100%" stop-color="#444444" />
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                    <div class="ff-text">REG FREEFIRE</div>
+                <div class="panel-column-right">
+                    <div class="icon-garena-brand">
+                        <img src="https://crystalpng.com/wp-content/uploads/2025/09/garena-logo.png" alt="Garena Logo">
+                    </div>
+                    <div class="label-brand-sub">REG FREEFIRE</div>
                 </div>
-
             </div>
 
-            <div class="panel-clear">
-                <div class="clear-title-x">X</div>
-                <button class="btn btn-clear">CLEAR</button>
+            <div class="panel-clear-actions">
+                <div class="watermark-x">X</div>
+                <button class="btn-action btn-clear">CLEAR</button>
             </div>
 
         </div>
 
-        <div class="footer-text">WEBSITE : MIGG SHOP</div>
+        <div class="menu-footer">
+            <div class="footer-shop-link">WEBSITE : MIGG SHOP</div>
+        </div>
+
     </div>
 
     <script>
-        document.getElementById('injectBtn').addEventListener('click', function() {
-            const button = this;
+        document.getElementById('actionInjectBtn').addEventListener('click', function() {
+            const currentBtn = this;
+            if (currentBtn.disabled) return;
             
-            // Prevent duplicate clicks during loading phase
-            if (button.disabled) return;
-            button.disabled = true;
-            button.classList.add('status-pulse');
+            currentBtn.disabled = true;
+            currentBtn.classList.add('loading-pulse');
             
-            let timeLeft = 2;
-            button.innerText = `WAIT (${timeLeft}s)`;
+            let secondsRemaining = 2;
+            currentBtn.innerText = `WAIT (${secondsRemaining}s)`;
 
-            // Countdown timer running every 1 second
-            const countdownInterval = setInterval(() => {
-                timeLeft--;
-                if (timeLeft > 0) {
-                    button.innerText = `WAIT (${timeLeft}s)`;
+            const dynamicCountdown = setInterval(() => {
+                secondsRemaining--;
+                if (secondsRemaining > 0) {
+                    currentBtn.innerText = `WAIT (${secondsRemaining}s)`;
                 } else {
-                    clearInterval(countdownInterval);
-                    button.innerText = "OPENING...";
+                    clearInterval(dynamicCountdown);
+                    currentBtn.innerText = "OPENING...";
                     
-                    // iOS deep-linking URL scheme to open Garena Free Fire
-                    // Standard universal scheme: freefire:// 
-                    // Regional alternative bundle identifier scheme: com.dts.freefireth://
+                    // Direct deep-link redirect for Free Fire iOS app scheme
                     window.location.href = "freefire://";
 
-                    // Reset button state safely after a delay if app fails to switch over
                     setTimeout(() => {
-                        button.disabled = false;
-                        button.classList.remove('status-pulse');
-                        button.innerText = "INJECT";
-                    }, 1500);
+                        currentBtn.disabled = false;
+                        currentBtn.classList.remove('loading-pulse');
+                        currentBtn.innerText = "INJECT";
+                    }, 1800);
                 }
             }, 1000);
         });
