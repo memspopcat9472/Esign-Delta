@@ -1,241 +1,424 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Expired | E-sign Delta</title>
+    <title>สุดยอด Mind Map ประเทศเนปาล 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Kanit', 'Poppins', sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
-        
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #0f0b24 100%);
             min-height: 100vh;
-            background: linear-gradient(-45deg, #000000, #1a1a1a, #2c2c2c, #3d3d3d);
-            background-size: 400% 400%;
-            animation: gradientFlow 15s ease infinite;
-            color: #fff;
             overflow-x: hidden;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        @keyframes gradientFlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        .container {
-            max-width: 600px;
-            text-align: center;
-            padding: 30px;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 15px;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-        }
-        
-        .error-code {
-            font-size: 8rem;
-            font-weight: 800;
-            color: #4cc9f0;
-            text-shadow: 0 0 15px rgba(76, 201, 240, 0.7);
-            line-height: 1;
-            margin-bottom: 20px;
-        }
-        
-        .error-title {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
             color: #fff;
         }
-        
-        .error-message {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            margin-bottom: 10px;
-            opacity: 0.9;
+
+        /* ตกแต่ง Scrollbar ให้ล้ำๆ */
+        ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
         }
-        
-        .esignature {
-            position: fixed;
-            left: 20px;
-            bottom: 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 1.5rem;
-            color: #4cc9f0;
-            text-shadow: 0 0 5px rgba(76, 201, 240, 0.7);
-            opacity: 0.9;
+        ::-webkit-scrollbar-track {
+            background: #0f0b24;
         }
-        
-        /* Animated circles in background */
-        .circles {
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #6366f1, #d946ef);
+            border-radius: 6px;
+            border: 3px solid #0f0b24;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #4f46e5, #c084fc);
+        }
+
+        /* ส่วนหัวข้อเว็บ */
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #38bdf8, #d946ef, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 40px rgba(217, 70, 239, 0.3);
+            letter-spacing: 2px;
+            animation: pulseTitle 3s infinite alternate;
+        }
+
+        header p {
+            color: #94a3b8;
+            margin-top: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* คอนเทนเนอร์ใหญ่สำหรับเลื่อนแบบเวอร์ๆ */
+        .mindmap-wrapper {
+            overflow: auto;
+            width: 100vw;
+            height: 80vh;
+            padding: 100px;
+            position: relative;
+            cursor: grab;
+        }
+
+        .mindmap-wrapper:active {
+            cursor: grabbing;
+        }
+
+        /* ผ้าใบสำหรับวาดโครงสร้างผัง */
+        .mindmap-canvas {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2600px; /* ขยายกว้างๆ ให้เลื่อนได้อย่างจุใจ */
+            height: 1000px;
+            position: relative;
+        }
+
+        /* SVG เส้นเชื่อมโยงแบบนีออนเรืองแสง */
+        .mindmap-svg {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden;
-            z-index: -1;
+            pointer-events: none;
+            z-index: 1;
         }
-        
-        .circles li {
-            position: absolute;
-            display: block;
-            list-style: none;
-            width: 20px;
-            height: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            animation: animate 25s linear infinite;
-            bottom: -150px;
+
+        .connection-line {
+            stroke: url(#neon-gradient);
+            stroke-width: 4;
+            fill: none;
+            stroke-dasharray: 8;
+            animation: dash 30s linear infinite;
+            filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.8));
+        }
+
+        /* จุดศูนย์กลาง (Central Node) */
+        .central-node {
+            background: rgba(255, 255, 255, 0.03);
+            border: 4px solid #f59e0b;
+            box-shadow: 0 0 50px rgba(245, 158, 11, 0.4), inset 0 0 30px rgba(245, 158, 11, 0.2);
+            backdrop-filter: blur(15px);
             border-radius: 50%;
+            width: 250px;
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            position: relative;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        
-        .circles li:nth-child(1) {
-            left: 25%;
-            width: 80px;
-            height: 80px;
-            animation-delay: 0s;
+
+        .central-node:hover {
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 0 0 80px rgba(245, 158, 11, 0.7), inset 0 0 40px rgba(245, 158, 11, 0.4);
         }
-        
-        .circles li:nth-child(2) {
-            left: 10%;
-            width: 20px;
-            height: 20px;
-            animation-delay: 2s;
-            animation-duration: 12s;
+
+        .central-node h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #f59e0b;
+            text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
         }
-        
-        .circles li:nth-child(3) {
-            left: 70%;
-            width: 20px;
-            height: 20px;
-            animation-delay: 4s;
+
+        .central-node span {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            letter-spacing: 3px;
+            margin-top: 5px;
         }
-        
-        .circles li:nth-child(4) {
-            left: 40%;
-            width: 60px;
-            height: 60px;
-            animation-delay: 0s;
-            animation-duration: 18s;
+
+        /* โครงสร้างกิ่งก้าน */
+        .branch-container {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            z-index: 4;
         }
-        
-        .circles li:nth-child(5) {
-            left: 65%;
-            width: 20px;
-            height: 20px;
-            animation-delay: 0s;
+
+        /* แยกตำแหน่งของ 3 กิ่งหลักตามโจทย์ในภาพ image.jpg */
+        #branch-basic { left: 150px; top: 250px; }
+        #branch-geo { left: 1000px; top: 50px; }
+        #branch-people { right: 150px; top: 300px; }
+
+        /* การ์ดหัวข้อกิ่งหลัก (Main Branch Titles) */
+        .branch-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-align: center;
+            margin-bottom: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            letter-spacing: 1px;
         }
-        
-        .circles li:nth-child(6) {
-            left: 75%;
-            width: 110px;
-            height: 110px;
-            animation-delay: 3s;
+
+        .color-basic { background: linear-gradient(135deg, #06b6d4, #0891b2); border: 2px solid #22d3ee; text-shadow: 0 2px 10px rgba(6,182,212,0.5); }
+        .color-geo { background: linear-gradient(135deg, #6366f1, #4f46e5); border: 2px solid #818cf8; text-shadow: 0 2px 10px rgba(99,102,241,0.5); }
+        .color-people { background: linear-gradient(135deg, #ec4899, #db2777); border: 2px solid #f472b6; text-shadow: 0 2px 10px rgba(236,72,153,0.5); }
+
+        /* การ์ดลูกย่อย (Sub-nodes Glassmorphism) */
+        .sub-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            padding: 25px;
+            border-radius: 20px;
+            width: 380px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-style: preserve-3d;
+            perspective: 1000px;
         }
-        
-        .circles li:nth-child(7) {
-            left: 35%;
-            width: 150px;
-            height: 150px;
-            animation-delay: 7s;
+
+        .sub-card:hover {
+            transform: translateY(-10px) scale(1.03) rotateX(10deg) rotateY(-5deg);
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 30px 60px rgba(99, 102, 241, 0.15);
         }
-        
-        .circles li:nth-child(8) {
-            left: 50%;
-            width: 25px;
-            height: 25px;
-            animation-delay: 15s;
-            animation-duration: 45s;
+
+        /* จุดเด่นเวลาโฮเวอร์แยกตามสีสีนหลักของกิ่ง */
+        #branch-basic .sub-card:hover { border-color: #22d3ee; box-shadow: 0 0 30px rgba(34,211,238,0.2); }
+        #branch-geo .sub-card:hover { border-color: #818cf8; box-shadow: 0 0 30px rgba(129,140,248,0.2); }
+        #branch-people .sub-card:hover { border-color: #f472b6; box-shadow: 0 0 30px rgba(244,114,182,0.2); }
+
+        .sub-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        
-        .circles li:nth-child(9) {
-            left: 20%;
-            width: 15px;
-            height: 15px;
-            animation-delay: 2s;
-            animation-duration: 35s;
+
+        #branch-basic h3 { color: #22d3ee; }
+        #branch-geo h3 { color: #818cf8; }
+        #branch-people h3 { color: #f472b6; }
+
+        .sub-card p, .sub-card li {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+            list-style-type: none;
+            margin-bottom: 6px;
         }
-        
-        .circles li:nth-child(10) {
-            left: 85%;
-            width: 150px;
-            height: 150px;
-            animation-delay: 0s;
-            animation-duration: 11s;
+
+        .sub-card ul {
+            padding-left: 5px;
         }
-        
-        @keyframes animate {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 1;
-                border-radius: 0;
+
+        .sub-card li::before {
+            content: "⚡";
+            margin-right: 8px;
+            font-size: 0.8rem;
+        }
+
+        /* อนิเมชั่นเส้นประวิ่งๆ */
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -1000;
             }
-            
-            100% {
-                transform: translateY(-1000px) rotate(720deg);
-                opacity: 0;
-                border-radius: 50%;
-            }
         }
-        
-        @media (max-width: 768px) {
-            .container {
-                margin: 20px;
-                padding: 20px;
-            }
-            
-            .error-code {
-                font-size: 6rem;
-            }
-            
-            .error-title {
-                font-size: 2rem;
-            }
-            
-            .esignature {
-                font-size: 1.2rem;
-                left: 15px;
-                bottom: 15px;
-            }
+
+        @keyframes pulseTitle {
+            from { filter: drop-shadow(0 0 20px rgba(217, 70, 239, 0.2)); }
+            to { filter: drop-shadow(0 0 40px rgba(217, 70, 239, 0.6)); }
+        }
+
+        /* คำแนะนำมุมจอด้านล่าง */
+        .instruction-badge {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: rgba(15, 11, 36, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 24px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            pointer-events: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
     </style>
 </head>
 <body>
-    <!-- Animated background elements -->
-    <ul class="circles">
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-    </ul>
-    
-    <div class="container">
-        <div class="error-code">404</div>
-        <h1 class="error-title">Page Expired</h1>
-        <p class="error-message">The page you are looking for has expired or doesn't exist.</p>
+
+    <header>
+        <h1>NEPAL INTERACTIVE MIND MAP</h1>
+        <p>กิจกรรมตั๋วสู่เอเชียใต้ • ข้อมูลเจาะลึกแบบทะลุมิติ</p>
+    </header>
+
+    <!-- พื้นที่สำหรับจับลากเลื่อนสุดฟิน -->
+    <div class="mindmap-wrapper" id="scrollContainer">
+        <div class="mindmap-canvas">
+            
+            <!-- ส่วนวาดเส้นนีออนด้วย SVG -->
+            <svg class="mindmap-svg">
+                <defs>
+                    <linearGradient id="neon-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#6366f1" />
+                        <stop offset="50%" stop-color="#d946ef" />
+                        <stop offset="100%" stop-color="#f59e0b" />
+                    </linearGradient>
+                </defs>
+                <!-- เส้นที่เชื่อมโยงจากศูนย์กลางไปยังทั้งสามฝั่ง -->
+                <path d="M 1300 500 Q 800 500, 450 450" class="connection-line"/>
+                <path d="M 1300 500 Q 1300 250, 1190 250" class="connection-line"/>
+                <path d="M 1300 500 Q 1800 500, 2150 480" class="connection-line"/>
+            </svg>
+
+            <!-- 1. กิ่งข้อมูลพื้นฐาน (ด้านซ้าย) -->
+            <div class="branch-container" id="branch-basic">
+                <div class="branch-title color-basic">🗺️ 1. ข้อมูลพื้นฐาน</div>
+                
+                <div class="sub-card">
+                    <h3>🏛️ เมืองหลวงและความเป็นมา</h3>
+                    <p><b>กรุงกาฐมาณฑุ (Kathmandu)</b> เป็นเมืองที่ใหญ่ที่สุดและเป็นศูนย์กลางทางประวัติศาสตร์ วัฒนธรรม และเศรษฐกิจของประเทศ</p>
+                </div>
+
+                <div class="sub-card">
+                    <h3>📏 ขนาดพื้นที่และประชากร</h3>
+                    <ul>
+                        <li><b>พื้นที่รวม:</b> ประมาณ 147,181 ตารางกิโลเมตร</li>
+                        <li><b>จำนวนประชากร:</b> ประมาณ 31 ล้านคน (อ้างอิงปี 2026)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ศูนย์กลาง: ประเทศเนปาล -->
+            <div class="central-node">
+                <h2>NEPAL</h2>
+                <span>เนปาล</span>
+            </div>
+
+            <!-- 2. กิ่งข้อมูลทางภูมิศาสตร์ (ด้านบนตรงกลาง) -->
+            <div class="branch-container" id="branch-geo">
+                <div class="branch-title color-geo">🏔️ 2. ข้อมูลทางภูมิศาสตร์</div>
+                
+                <div class="sub-card" style="width: 500px;">
+                    <h3>📍 ตำแหน่งที่ตั้งในเอเชียใต้</h3>
+                    <p>ตั้งอยู่ตอนเหนือสุดของเอเชียใต้ เป็นประเทศ<b>ไม่มีทางออกสู่ทะเล (Landlocked)</b> ขนาบข้างด้วยยักษ์ใหญ่อย่างประเทศจีน (ทิเบต) ทางเหนือ และประเทศอินเดียทางใต้ ตะวันออก และตะวันตก</p>
+                </div>
+
+                <div style="display: flex; gap: 20px;">
+                    <div class="sub-card" style="width: 240px;">
+                        <h3>🌤️ ภูมิอากาศสุดขั้ว</h3>
+                        <p>แบ่งตามความสูง: ตอนล่างเป็นกึ่งเขตร้อนชื้น ตอนกลางอบอุ่นสบาย และตอนเหนือเป็นเขตหิมะหนาวจัดแบบอาร์กติก</p>
+                    </div>
+
+                    <div class="sub-card" style="width: 240px;">
+                        <h3>💎 ทรัพยากรเด่น</h3>
+                        <p>มหาศาลที่สุดคือ <b>พลังงานน้ำ (Hydroelectric)</b> จากธารน้ำแข็งที่ละลาย รวมถึงป่าไม้หนาแน่น และแร่ควอตซ์</p>
+                    </div>
+                </div>
+
+                <div class="sub-card" style="width: 500px;">
+                    <h3>🌟 สถานที่สำคัญและแลนด์มาร์กเด่น</h3>
+                    <ul>
+                        <li><b>ยอดเขาเอเวอเรสต์ (Mount Everest):</b> สูงที่สุดในโลกท้าทายนักปีนเขา</li>
+                        <li><b>ลุมพินีวัน (Lumbini):</b> สถานที่ประสูติของพระพุทธเจ้า มรดกโลกศักดิ์สิทธิ์</li>
+                        <li><b>เมืองโพคารา (Pokhara):</b> สวรรค์ริมทะเลสาบเฟวาและวิวเทือกเขาหางปลาวาฬ</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 3. กิ่งลักษณะประชากร (ด้านขวา) -->
+            <div class="branch-container" id="branch-people">
+                <div class="branch-title color-people">👥 3. ลักษณะประชากร</div>
+                
+                <div class="sub-card">
+                    <h3>🧬 ความหลากหลายของเชื้อชาติ</h3>
+                    <p>ประกอบด้วยกลุ่มชาติพันธุ์มากกว่า 100 กลุ่ม!</p>
+                    <ul>
+                        <li>กลุ่มหลักคือ <b>ชาวเชตรี (Chhetri)</b> และ<b>ชาวพราหมณ์ (Bahun)</b></li>
+                        <li><b>ชาวเชอร์ปา (Sherpa):</b> ยอดนักนำทางขึ้นเขาหิมาลัย</li>
+                        <li><b>ชาวเนวาร์ (Newar):</b> ผู้อนุรักษ์ศิลปะสถาปัตยกรรมดั้งเดิม</li>
+                    </ul>
+                </div>
+
+                <div class="sub-card">
+                    <h3>🙏 การนับถือศาสนา</h3>
+                    <ul>
+                        <li><b>ศาสนาฮินดู (81%):</b> เป็นวิถีชีวิตหลักและวัฒนธรรมส่วนใหญ่ของประเทศ</li>
+                        <li><b>ศาสนาพุทธ (9%):</b> หล่อหลอมอย่างเหนียวแน่นร่วมกับฮินดู โดยเฉพาะแถบภูเขาสูง</li>
+                        <li><b>ศาสนาอื่นๆ (10%):</b> อิสลาม, คริสต์ และศาสนากิราต (ศาสนาพื้นเมือง)</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
     </div>
-    
-    <div class="esignature">E-sign Delta</div>
+
+    <div class="instruction-badge">
+        🖱️ คลิกเมาส์ค้างแล้วลากซ้าย-ขวา หรือใช้ Scrollbar เพื่อเลื่อนดูให้เวอร์วังอลังการยิ่งขึ้น!
+    </div>
 
     <script>
-        // Simple animation for the error code
-        const errorCode = document.querySelector('.error-code');
-        setInterval(() => {
-            errorCode.style.textShadow = 0 0 20px rgba(76, 201, 240, ${0.5 + Math.random() * 0.5});
-        }, 1000);
+        // ระบบ Click and Drag เพื่อเลื่อนหน้าจอเก๋ๆ ลื่นๆ
+        const slider = document.getElementById('scrollContainer');
+        let isDown = false;
+        let startX;
+        let startY;
+        let scrollLeft;
+        let scrollTop;
+
+        // เลื่อนหน้าจอให้อยู่ตรงกลางตอนโหลดเสร็จ
+        window.addEventListener('load', () => {
+            slider.scrollLeft = (slider.scrollWidth - slider.clientWidth) / 2;
+            slider.scrollTop = 50;
+        });
+
+        slider.addEventListener('mousedown', (e) => {
+            isDown = true;
+            slider.style.cursor = 'grabbing';
+            startX = e.pageX - slider.offsetLeft;
+            startY = e.pageY - slider.offsetTop;
+            scrollLeft = slider.scrollLeft;
+            scrollTop = slider.scrollTop;
+        });
+        
+        slider.addEventListener('mouseleave', () => {
+            isDown = false;
+            slider.style.cursor = 'grab';
+        });
+        
+        slider.addEventListener('mouseup', () => {
+            isDown = false;
+            slider.style.cursor = 'grab';
+        });
+        
+        slider.addEventListener('mousemove', (e) => {
+            if(!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const y = e.pageY - slider.offsetTop;
+            const walkX = (x - startX) * 1.5; // ความเร็วการลาก X
+            const walkY = (y - startY) * 1.5; // ความเร็วการลาก Y
+            slider.scrollLeft = scrollLeft - walkX;
+            slider.scrollTop = scrollTop - walkY;
+        });
     </script>
 </body>
 </html>
