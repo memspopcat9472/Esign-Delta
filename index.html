@@ -1,423 +1,350 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>สุดยอด Mind Map ประเทศเนปาล 2026</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <title>MIGG REG</title>
     <style>
+        /* Base Setup */
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Kanit', 'Poppins', sans-serif;
-            -webkit-font-smoothing: antialiased;
+            font-family: 'Arial Black', Impact, sans-serif;
+            user-select: none;
         }
 
         body {
-            background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #0f0b24 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
-            color: #fff;
-        }
-
-        /* ตกแต่ง Scrollbar ให้ล้ำๆ */
-        ::-webkit-scrollbar {
-            width: 12px;
-            height: 12px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0f0b24;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #6366f1, #d946ef);
-            border-radius: 6px;
-            border: 3px solid #0f0b24;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, #4f46e5, #c084fc);
-        }
-
-        /* ส่วนหัวข้อเว็บ */
-        header {
-            text-align: center;
-            padding: 40px 20px;
-            position: relative;
-            z-index: 10;
-        }
-
-        header h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            background: linear-gradient(45deg, #38bdf8, #d946ef, #f59e0b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 40px rgba(217, 70, 239, 0.3);
-            letter-spacing: 2px;
-            animation: pulseTitle 3s infinite alternate;
-        }
-
-        header p {
-            color: #94a3b8;
-            margin-top: 10px;
-            font-size: 1.1rem;
-        }
-
-        /* คอนเทนเนอร์ใหญ่สำหรับเลื่อนแบบเวอร์ๆ */
-        .mindmap-wrapper {
-            overflow: auto;
-            width: 100vw;
-            height: 80vh;
-            padding: 100px;
-            position: relative;
-            cursor: grab;
-        }
-
-        .mindmap-wrapper:active {
-            cursor: grabbing;
-        }
-
-        /* ผ้าใบสำหรับวาดโครงสร้างผัง */
-        .mindmap-canvas {
+            background-color: #050505;
+            color: #ffffff;
             display: flex;
-            align-items: center;
             justify-content: center;
-            width: 2600px; /* ขยายกว้างๆ ให้เลื่อนได้อย่างจุใจ */
-            height: 1000px;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            background-image: radial-gradient(circle, #111 10%, #050505 90%);
+        }
+
+        /* Main Container matching the UI Aspect */
+        .wrapper {
             position: relative;
-        }
-
-        /* SVG เส้นเชื่อมโยงแบบนีออนเรืองแสง */
-        .mindmap-svg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .connection-line {
-            stroke: url(#neon-gradient);
-            stroke-width: 4;
-            fill: none;
-            stroke-dasharray: 8;
-            animation: dash 30s linear infinite;
-            filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.8));
-        }
-
-        /* จุดศูนย์กลาง (Central Node) */
-        .central-node {
-            background: rgba(255, 255, 255, 0.03);
-            border: 4px solid #f59e0b;
-            box-shadow: 0 0 50px rgba(245, 158, 11, 0.4), inset 0 0 30px rgba(245, 158, 11, 0.2);
-            backdrop-filter: blur(15px);
-            border-radius: 50%;
-            width: 250px;
-            height: 250px;
+            width: 800px;
+            height: 500px;
+            background-color: #000000;
+            border: 2px solid #1a1a1a;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            z-index: 5;
-            position: relative;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            justify-content: space-between;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
         }
 
-        .central-node:hover {
-            transform: scale(1.15) rotate(5deg);
-            box-shadow: 0 0 80px rgba(245, 158, 11, 0.7), inset 0 0 40px rgba(245, 158, 11, 0.4);
+        /* Side Text (GOD & DISCORD) */
+        .side-text-left {
+            position: absolute;
+            left: 15px;
+            bottom: 20px;
+            writing-mode: vertical-lr;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 4px;
+            color: #555;
         }
 
-        .central-node h2 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: #f59e0b;
-            text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+        .side-text-right {
+            position: absolute;
+            right: 15px;
+            bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 2px;
+            color: #555;
+            writing-mode: vertical-lr;
         }
 
-        .central-node span {
-            font-size: 1.1rem;
-            color: #cbd5e1;
-            letter-spacing: 3px;
+        .discord-icon {
+            width: 20px;
+            height: 20px;
+            fill: #555;
+            transform: rotate(90deg);
+        }
+
+        /* Header / Metallic Typography */
+        .header {
+            text-align: center;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .main-title {
+            font-size: 64px;
+            font-style: italic;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            background: linear-gradient(to bottom, #ffffff 0%, #e1e1e1 40%, #a1a1a1 60%, #ffffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.8));
+            line-height: 0.9;
+        }
+
+        .sub-title {
+            font-size: 24px;
+            font-style: italic;
+            letter-spacing: 8px;
+            color: #ffffff;
+            border-top: 3px solid #ffffff;
+            display: inline-block;
+            padding: 0 40px;
             margin-top: 5px;
         }
 
-        /* โครงสร้างกิ่งก้าน */
-        .branch-container {
-            position: absolute;
+        /* Center Grid Layout */
+        .content-container {
+            display: flex;
+            gap: 20px;
+            width: 90%;
+            height: 240px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Left Main Panel */
+        .panel-main {
+            flex: 3;
+            height: 100%;
+            border: 2px solid #333;
+            background: linear-gradient(135deg, #0d0d0d 0%, #050505 100%);
+            display: flex;
+            padding: 20px;
+            position: relative;
+        }
+
+        .section-inject {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 30px;
-            z-index: 4;
-        }
-
-        /* แยกตำแหน่งของ 3 กิ่งหลักตามโจทย์ในภาพ image.jpg */
-        #branch-basic { left: 150px; top: 250px; }
-        #branch-geo { left: 1000px; top: 50px; }
-        #branch-people { right: 150px; top: 300px; }
-
-        /* การ์ดหัวข้อกิ่งหลัก (Main Branch Titles) */
-        .branch-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            padding: 12px 30px;
-            border-radius: 50px;
-            text-align: center;
-            margin-bottom: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            letter-spacing: 1px;
-        }
-
-        .color-basic { background: linear-gradient(135deg, #06b6d4, #0891b2); border: 2px solid #22d3ee; text-shadow: 0 2px 10px rgba(6,182,212,0.5); }
-        .color-geo { background: linear-gradient(135deg, #6366f1, #4f46e5); border: 2px solid #818cf8; text-shadow: 0 2px 10px rgba(99,102,241,0.5); }
-        .color-people { background: linear-gradient(135deg, #ec4899, #db2777); border: 2px solid #f472b6; text-shadow: 0 2px 10px rgba(236,72,153,0.5); }
-
-        /* การ์ดลูกย่อย (Sub-nodes Glassmorphism) */
-        .sub-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            padding: 25px;
-            border-radius: 20px;
-            width: 380px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            transform-style: preserve-3d;
-            perspective: 1000px;
-        }
-
-        .sub-card:hover {
-            transform: translateY(-10px) scale(1.03) rotateX(10deg) rotateY(-5deg);
-            background: rgba(255, 255, 255, 0.07);
-            box-shadow: 0 30px 60px rgba(99, 102, 241, 0.15);
-        }
-
-        /* จุดเด่นเวลาโฮเวอร์แยกตามสีสีนหลักของกิ่ง */
-        #branch-basic .sub-card:hover { border-color: #22d3ee; box-shadow: 0 0 30px rgba(34,211,238,0.2); }
-        #branch-geo .sub-card:hover { border-color: #818cf8; box-shadow: 0 0 30px rgba(129,140,248,0.2); }
-        #branch-people .sub-card:hover { border-color: #f472b6; box-shadow: 0 0 30px rgba(244,114,182,0.2); }
-
-        .sub-card h3 {
-            font-size: 1.2rem;
-            margin-bottom: 12px;
-            display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: space-between;
+            border-right: 1px solid #222;
+            padding-right: 10px;
         }
 
-        #branch-basic h3 { color: #22d3ee; }
-        #branch-geo h3 { color: #818cf8; }
-        #branch-people h3 { color: #f472b6; }
-
-        .sub-card p, .sub-card li {
-            font-size: 0.95rem;
-            color: #cbd5e1;
-            line-height: 1.6;
-            list-style-type: none;
-            margin-bottom: 6px;
+        .section-logo {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding-left: 10px;
         }
 
-        .sub-card ul {
-            padding-left: 5px;
+        /* Right Clear Panel */
+        .panel-clear {
+            flex: 0.8;
+            height: 100%;
+            border: 2px solid #333;
+            background: linear-gradient(135deg, #0d0d0d 0%, #050505 100%);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 10px;
         }
 
-        .sub-card li::before {
-            content: "⚡";
-            margin-right: 8px;
-            font-size: 0.8rem;
+        /* Regedit Icon Styling */
+        .regedit-container {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            filter: drop-shadow(0 0 8px rgba(0, 120, 212, 0.4));
         }
 
-        /* อนิเมชั่นเส้นประวิ่งๆ */
-        @keyframes dash {
-            to {
-                stroke-dashoffset: -1000;
-            }
+        /* Buttons Styling */
+        .btn {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 8px 24px;
+            font-size: 18px;
+            font-style: italic;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 85%;
+            text-align: center;
+            box-shadow: inset 0 -3px 0 #b5b5b5;
+            transition: all 0.1s ease;
         }
 
-        @keyframes pulseTitle {
-            from { filter: drop-shadow(0 0 20px rgba(217, 70, 239, 0.2)); }
-            to { filter: drop-shadow(0 0 40px rgba(217, 70, 239, 0.6)); }
+        .btn:active {
+            transform: scale(0.98);
+            background: #e0e0e0;
         }
 
-        /* คำแนะนำมุมจอด้านล่าง */
-        .instruction-badge {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background: rgba(15, 11, 36, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px 24px;
-            border-radius: 30px;
-            backdrop-filter: blur(10px);
-            z-index: 100;
-            pointer-events: none;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            animation: bounce 2s infinite;
+        .btn-clear {
+            background: transparent;
+            color: #aaaaaa;
+            border: 2px solid #444;
+            box-shadow: none;
+            width: 90%;
+            font-size: 14px;
+        }
+        
+        .btn-clear:hover {
+            color: #fff;
+            border-color: #666;
         }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+        /* Static Texts inside panels */
+        .ff-text {
+            font-size: 16px;
+            font-style: italic;
+            color: #888;
+            letter-spacing: 2px;
+        }
+
+        .clear-title-x {
+            font-size: 56px;
+            color: #1a1a1a;
+            font-style: italic;
+            line-height: 1;
+            margin-top: 15px;
+        }
+
+        /* Footer */
+        .footer-text {
+            font-size: 12px;
+            letter-spacing: 3px;
+            color: #ffffff;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        /* Utility Class for Counting/Status UI */
+        .status-pulse {
+            animation: pulse 1s infinite alternate;
+            color: #ff3b30 !important;
+        }
+
+        @keyframes pulse {
+            from { opacity: 0.6; }
+            to { opacity: 1; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>NEPAL INTERACTIVE MIND MAP</h1>
-        <p>กิจกรรมตั๋วสู่เอเชียใต้ • ข้อมูลเจาะลึกแบบทะลุมิติ</p>
-    </header>
+    <div class="wrapper">
+        <div class="side-text-left">GOD</div>
 
-    <!-- พื้นที่สำหรับจับลากเลื่อนสุดฟิน -->
-    <div class="mindmap-wrapper" id="scrollContainer">
-        <div class="mindmap-canvas">
-            
-            <!-- ส่วนวาดเส้นนีออนด้วย SVG -->
-            <svg class="mindmap-svg">
-                <defs>
-                    <linearGradient id="neon-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#6366f1" />
-                        <stop offset="50%" stop-color="#d946ef" />
-                        <stop offset="100%" stop-color="#f59e0b" />
-                    </linearGradient>
-                </defs>
-                <!-- เส้นที่เชื่อมโยงจากศูนย์กลางไปยังทั้งสามฝั่ง -->
-                <path d="M 1300 500 Q 800 500, 450 450" class="connection-line"/>
-                <path d="M 1300 500 Q 1300 250, 1190 250" class="connection-line"/>
-                <path d="M 1300 500 Q 1800 500, 2150 480" class="connection-line"/>
+        <div class="side-text-right">
+            DISCORD
+            <svg class="discord-icon" viewBox="0 0 127.14 96.36">
+                <path d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.86,54.65,1,77.53A105.73,105.73,0,0,0,32,96.36a74.37,74.37,0,0,0,6.72-10.93,68.6,68.6,0,0,1-10.64-5.12c.91-.67,1.81-1.37,2.65-2.1a75.22,75.22,0,0,0,72.86,0c.84.73,1.74,1.43,2.65,2.1a68.86,68.86,0,0,1-10.64,5.12,74.74,74.74,0,0,0,6.72,10.93,105.73,105.73,0,0,0,31.05-18.83C129.92,50.7,124.16,27.78,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.87,46,53.87,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,84.69,40.36,96.11,46,96.11,53,91,65.69,84.69,65.69Z"/>
             </svg>
+        </div>
 
-            <!-- 1. กิ่งข้อมูลพื้นฐาน (ด้านซ้าย) -->
-            <div class="branch-container" id="branch-basic">
-                <div class="branch-title color-basic">🗺️ 1. ข้อมูลพื้นฐาน</div>
+        <div class="header">
+            <div class="main-title">MIGG</div>
+            <div class="sub-title">REG</div>
+        </div>
+
+        <div class="content-container">
+            
+            <div class="panel-main">
                 
-                <div class="sub-card">
-                    <h3>🏛️ เมืองหลวงและความเป็นมา</h3>
-                    <p><b>กรุงกาฐมาณฑุ (Kathmandu)</b> เป็นเมืองที่ใหญ่ที่สุดและเป็นศูนย์กลางทางประวัติศาสตร์ วัฒนธรรม และเศรษฐกิจของประเทศ</p>
-                </div>
+                <div class="section-inject">
+                    <div class="regedit-container">
+                        <svg viewBox="0 0 64 64" width="70" height="70">
+                            <path d="M12 36 L28 28 L28 46 L12 54 Z" fill="#005A9E" />
+                            <path d="M28 28 L44 36 L44 54 L28 46 Z" fill="#0078D4" />
+                            <path d="M12 36 L28 28 L44 36 L28 44 Z" fill="#2Bb8FF" />
+                            
+                            <path d="M28 16 L44 8 L44 26 L28 34 Z" fill="#005A9E" />
+                            <path d="M44 8 L60 16 L60 34 L44 26 Z" fill="#0078D4" />
+                            <path d="M28 16 L44 8 L60 16 L44 24 Z" fill="#2Bb8FF" />
 
-                <div class="sub-card">
-                    <h3>📏 ขนาดพื้นที่และประชากร</h3>
-                    <ul>
-                        <li><b>พื้นที่รวม:</b> ประมาณ 147,181 ตารางกิโลเมตร</li>
-                        <li><b>จำนวนประชากร:</b> ประมาณ 31 ล้านคน (อ้างอิงปี 2026)</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- ศูนย์กลาง: ประเทศเนปาล -->
-            <div class="central-node">
-                <h2>NEPAL</h2>
-                <span>เนปาล</span>
-            </div>
-
-            <!-- 2. กิ่งข้อมูลทางภูมิศาสตร์ (ด้านบนตรงกลาง) -->
-            <div class="branch-container" id="branch-geo">
-                <div class="branch-title color-geo">🏔️ 2. ข้อมูลทางภูมิศาสตร์</div>
-                
-                <div class="sub-card" style="width: 500px;">
-                    <h3>📍 ตำแหน่งที่ตั้งในเอเชียใต้</h3>
-                    <p>ตั้งอยู่ตอนเหนือสุดของเอเชียใต้ เป็นประเทศ<b>ไม่มีทางออกสู่ทะเล (Landlocked)</b> ขนาบข้างด้วยยักษ์ใหญ่อย่างประเทศจีน (ทิเบต) ทางเหนือ และประเทศอินเดียทางใต้ ตะวันออก และตะวันตก</p>
-                </div>
-
-                <div style="display: flex; gap: 20px;">
-                    <div class="sub-card" style="width: 240px;">
-                        <h3>🌤️ ภูมิอากาศสุดขั้ว</h3>
-                        <p>แบ่งตามความสูง: ตอนล่างเป็นกึ่งเขตร้อนชื้น ตอนกลางอบอุ่นสบาย และตอนเหนือเป็นเขตหิมะหนาวจัดแบบอาร์กติก</p>
+                            <g transform="translate(-6, -10)">
+                                <path d="M16 20 L26 15 L26 25 L16 30 Z" fill="#D83B01" />
+                                <path d="M26 15 L36 20 L36 30 L26 25 Z" fill="#F14F21" />
+                                <path d="M16 20 L26 15 L36 20 L26 25 Z" fill="#F85A3F" />
+                            </g>
+                        </svg>
                     </div>
-
-                    <div class="sub-card" style="width: 240px;">
-                        <h3>💎 ทรัพยากรเด่น</h3>
-                        <p>มหาศาลที่สุดคือ <b>พลังงานน้ำ (Hydroelectric)</b> จากธารน้ำแข็งที่ละลาย รวมถึงป่าไม้หนาแน่น และแร่ควอตซ์</p>
-                    </div>
+                    <button class="btn" id="injectBtn">INJECT</button>
                 </div>
 
-                <div class="sub-card" style="width: 500px;">
-                    <h3>🌟 สถานที่สำคัญและแลนด์มาร์กเด่น</h3>
-                    <ul>
-                        <li><b>ยอดเขาเอเวอเรสต์ (Mount Everest):</b> สูงที่สุดในโลกท้าทายนักปีนเขา</li>
-                        <li><b>ลุมพินีวัน (Lumbini):</b> สถานที่ประสูติของพระพุทธเจ้า มรดกโลกศักดิ์สิทธิ์</li>
-                        <li><b>เมืองโพคารา (Pokhara):</b> สวรรค์ริมทะเลสาบเฟวาและวิวเทือกเขาหางปลาวาฬ</li>
-                    </ul>
+                <div class="section-logo">
+                    <svg width="90" height="90" viewBox="0 0 100 100" fill="none">
+                        <path d="M85,30 C75,15 50,10 35,25 C25,35 22,50 28,62 C22,55 18,45 20,35 C12,48 10,65 22,78 C35,92 60,95 78,82 C92,70 95,48 85,30 Z" fill="url(#silverGradient)" />
+                        <path d="M68,45 C62,38 50,35 42,42 C36,48 35,58 40,65 C35,58 35,50 40,45 C32,52 32,65 42,72 C50,78 62,75 68,65 C72,58 72,50 68,45 Z" fill="#111" opacity="0.7"/>
+                        <defs>
+                            <linearGradient id="silverGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#ffffff" />
+                                <stop offset="50%" stop-color="#a1a1a1" />
+                                <stop offset="100%" stop-color="#444444" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="ff-text">REG FREEFIRE</div>
                 </div>
+
             </div>
 
-            <!-- 3. กิ่งลักษณะประชากร (ด้านขวา) -->
-            <div class="branch-container" id="branch-people">
-                <div class="branch-title color-people">👥 3. ลักษณะประชากร</div>
-                
-                <div class="sub-card">
-                    <h3>🧬 ความหลากหลายของเชื้อชาติ</h3>
-                    <p>ประกอบด้วยกลุ่มชาติพันธุ์มากกว่า 100 กลุ่ม!</p>
-                    <ul>
-                        <li>กลุ่มหลักคือ <b>ชาวเชตรี (Chhetri)</b> และ<b>ชาวพราหมณ์ (Bahun)</b></li>
-                        <li><b>ชาวเชอร์ปา (Sherpa):</b> ยอดนักนำทางขึ้นเขาหิมาลัย</li>
-                        <li><b>ชาวเนวาร์ (Newar):</b> ผู้อนุรักษ์ศิลปะสถาปัตยกรรมดั้งเดิม</li>
-                    </ul>
-                </div>
-
-                <div class="sub-card">
-                    <h3>🙏 การนับถือศาสนา</h3>
-                    <ul>
-                        <li><b>ศาสนาฮินดู (81%):</b> เป็นวิถีชีวิตหลักและวัฒนธรรมส่วนใหญ่ของประเทศ</li>
-                        <li><b>ศาสนาพุทธ (9%):</b> หล่อหลอมอย่างเหนียวแน่นร่วมกับฮินดู โดยเฉพาะแถบภูเขาสูง</li>
-                        <li><b>ศาสนาอื่นๆ (10%):</b> อิสลาม, คริสต์ และศาสนากิราต (ศาสนาพื้นเมือง)</li>
-                    </ul>
-                </div>
+            <div class="panel-clear">
+                <div class="clear-title-x">X</div>
+                <button class="btn btn-clear">CLEAR</button>
             </div>
 
         </div>
-    </div>
 
-    <div class="instruction-badge">
-        🖱️ คลิกเมาส์ค้างแล้วลากซ้าย-ขวา หรือใช้ Scrollbar เพื่อเลื่อนดูให้เวอร์วังอลังการยิ่งขึ้น!
+        <div class="footer-text">WEBSITE : MIGG SHOP</div>
     </div>
 
     <script>
-        // ระบบ Click and Drag เพื่อเลื่อนหน้าจอเก๋ๆ ลื่นๆ
-        const slider = document.getElementById('scrollContainer');
-        let isDown = false;
-        let startX;
-        let startY;
-        let scrollLeft;
-        let scrollTop;
+        document.getElementById('injectBtn').addEventListener('click', function() {
+            const button = this;
+            
+            // Prevent duplicate clicks during loading phase
+            if (button.disabled) return;
+            button.disabled = true;
+            button.classList.add('status-pulse');
+            
+            let timeLeft = 2;
+            button.innerText = `WAIT (${timeLeft}s)`;
 
-        // เลื่อนหน้าจอให้อยู่ตรงกลางตอนโหลดเสร็จ
-        window.addEventListener('load', () => {
-            slider.scrollLeft = (slider.scrollWidth - slider.clientWidth) / 2;
-            slider.scrollTop = 50;
-        });
+            // Countdown timer running every 1 second
+            const countdownInterval = setInterval(() => {
+                timeLeft--;
+                if (timeLeft > 0) {
+                    button.innerText = `WAIT (${timeLeft}s)`;
+                } else {
+                    clearInterval(countdownInterval);
+                    button.innerText = "OPENING...";
+                    
+                    // iOS deep-linking URL scheme to open Garena Free Fire
+                    // Standard universal scheme: freefire:// 
+                    // Regional alternative bundle identifier scheme: com.dts.freefireth://
+                    window.location.href = "freefire://";
 
-        slider.addEventListener('mousedown', (e) => {
-            isDown = true;
-            slider.style.cursor = 'grabbing';
-            startX = e.pageX - slider.offsetLeft;
-            startY = e.pageY - slider.offsetTop;
-            scrollLeft = slider.scrollLeft;
-            scrollTop = slider.scrollTop;
-        });
-        
-        slider.addEventListener('mouseleave', () => {
-            isDown = false;
-            slider.style.cursor = 'grab';
-        });
-        
-        slider.addEventListener('mouseup', () => {
-            isDown = false;
-            slider.style.cursor = 'grab';
-        });
-        
-        slider.addEventListener('mousemove', (e) => {
-            if(!isDown) return;
-            e.preventDefault();
-            const x = e.pageX - slider.offsetLeft;
-            const y = e.pageY - slider.offsetTop;
-            const walkX = (x - startX) * 1.5; // ความเร็วการลาก X
-            const walkY = (y - startY) * 1.5; // ความเร็วการลาก Y
-            slider.scrollLeft = scrollLeft - walkX;
-            slider.scrollTop = scrollTop - walkY;
+                    // Reset button state safely after a delay if app fails to switch over
+                    setTimeout(() => {
+                        button.disabled = false;
+                        button.classList.remove('status-pulse');
+                        button.innerText = "INJECT";
+                    }, 1500);
+                }
+            }, 1000);
         });
     </script>
 </body>
