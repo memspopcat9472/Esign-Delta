@@ -1,133 +1,189 @@
-const chatInput = document.querySelector("#chat-input");
-const sendButton = document.querySelector("#send-btn");
-const chatContainer = document.querySelector(".chat-container");
-const themeButton = document.querySelector("#theme-btn");
-const deleteButton = document.querySelector("#delete-btn");
-let userText = null;
-const API_KEY = "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"; // Paste your API key here
-const loadDataFromLocalstorage = () => {
-    // Load saved chats and theme from local storage and apply/add on the page
-    const themeColor = localStorage.getItem("themeColor");
-    document.body.classList.toggle("light-mode", themeColor === "light_mode");
-    themeButton.innerText = document.body.classList.contains("light-mode") ? "dark_mode" : "light_mode";
-    const defaultText = `<div class="default-text">
-                            <h1>ChatGPT Clone</h1>
-                            <p>Start a conversation and explore the power of AI.<br> Your chat history will be displayed here.</p>
-                        </div>`
-    chatContainer.innerHTML = localStorage.getItem("all-chats") || defaultText;
-    chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to bottom of the chat container
-}
-const createChatElement = (content, className) => {
-    // Create new div and apply chat, specified class and set html content of div
-    const chatDiv = document.createElement("div");
-    chatDiv.classList.add("chat", className);
-    chatDiv.innerHTML = content;
-    return chatDiv; // Return the created chat div
-}
-const getChatResponse = async (incomingChatDiv) => {
-    const API_URL = "https://api.openai.com/v1/completions";
-    const pElement = document.createElement("p");
-    // Define the properties and data for the API request
-    const requestOptions = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${API_KEY}`
-        },
-        body: JSON.stringify({
-            model: "text-davinci-003",
-            prompt: userText,
-            max_tokens: 2048,
-            temperature: 0.2,
-            n: 1,
-            stop: null
-        })
+document.addEventListener("DOMContentLoaded", () => {
+  const focusItems = Array.from(document.querySelectorAll(".focus-item"));
+  const ambientGlow = document.getElementById("ambientGlow");
+  const progressBar = document.getElementById("progressBar");
+
+  // เก็บค่าสถานะปัจจุบันของแต่ละ Element เพื่อทำ Smooth Lerp (นุ่มนวล 60fps)
+  const itemStates = focusItems.map(() => ({
+    opacity: 0.05,
+    blur: 14,
+    scale: 0.92,
+    translateY: 0,
+  }));
+
+  let lastScrollY = window.scrollY;
+  let scrollVelocity = 0;
+
+  // ฟังก์ชันคำนวณความคมชัดตามระยะห่างจากกึ่งกลางหน้าจอ (50vh)
+  function updateOpticalFocus() {
+    const viewportHeight = window.innerHeight;
+    const viewportCenter = viewportHeight / 2;
+    // รัศมีโซนโฟกัส: ยิ่งออกห่างจากกลางจอเกินระยะนี้ จะยิ่งเบลอและจางลงจนถึงขอบเว็บ
+    const maxDistance = viewportHeight * 0.46;
+
+    let activeMood = "calm";
+    let closestDistance = Infinity;
+
+    focusItems.forEach((item, index) => {
+      const rect = item.getBoundingClientRect();
+      const itemCenter = rect.top + rect.height / 2;
+      const distanceFromCenter = itemCenter - viewportCenter;
+      const absDistance = Math.abs(distanceFromCenter);
+
+      // เช็กว่า Element ไหนอยู่ใกล้กลางหน้าจอมากที่สุด เพื่อเปลี่ยนแสงบรรยากาศ
+      if (absDistance < closestDistance) {
+        closestDistance = absDistance;
+        activeMood = item.dataset.mood || "calm";
+      }
+
+      // คำนวณอัตราส่วนความห่างจากจุดกึ่งกลาง (0 = กลางจอเป๊ะ, 1 = ขอบบนหรือขอบล่าง)
+      const normalized = Math.min(absDistance / maxDistance, 1);
+
+      // ใช้เส้นโค้ง Ease-In-Out เพื่อให้ตรงกลางคมชัดนานและค่อยๆ จางอย่างนุ่มนวล
+      const focusFactor = Math.pow(1 - normalized, 1.85);
+
+      const targetOpacity = 0.04 + focusFactor * 0.96; // 0.04 -> 1.0
+      const targetBlur = (1 - focusFactor) * 14; // 14px -> 0px
+      const targetScale = 0.92 + focusFactor * 0.08; // 0.92 -> 1.0
+      const targetY = (distanceFromCenter / viewportHeight) * 28; // Parallax เล็กน้อย
+
+      // Smooth interpolation (Lerp)
+      const state = itemStates[index];
+      state.opacity += (targetOpacity - state.opacity) * 0.14;
+      state.blur += (targetBlur - state.blur) * 0.14;
+      state.scale += (targetScale - state.scale) * 0.14;
+      state.translateY += (targetY - state.translateY) * 0.14;
+
+      item.style.opacity = state.opacity.toFixed(3);
+      item.style.filter = `blur(${state.blur.toFixed(2)}px)`;
+      item.style.transform = `translate3d(0, ${state.translateY.toFixed(2)}px, 0) scale(${state.scale.toFixed(4)})`;
+    });
+
+    // เปลี่ยนสีแสงพื้นหลังเมื่อเลื่อนถึงท่อน "แล้วบ้าคลั่ง"
+    if (activeMood === "狂気") {
+      ambientGlow.classList.add("is-frenzy");
+    } else {
+      ambientGlow.classList.remove("is-frenzy");
     }
-    // Send POST request to API, get response and set the reponse as paragraph element text
+
+    // อัปเดตแถบ Scroll Progress ด้านขวา
+    const maxScroll = document.documentElement.scrollHeight - viewportHeight;
+    const progress = maxScroll > 0 ? (window.scrollY / maxScroll) * 100 : 0;
+    progressBar.style.height = `${Math.min(Math.max(progress, 0), 100)}%`;
+
+    // คำนวณความเร็วการเลื่อนสำหรับระบบอนุภาคพื้นหลัง
+    const currentScrollY = window.scrollY;
+    scrollVelocity = (currentScrollY - lastScrollY) * 0.18;
+    lastScrollY = currentScrollY;
+
+    requestAnimationFrame(updateOpticalFocus);
+  }
+
+  requestAnimationFrame(updateOpticalFocus);
+
+  // ==========================================
+  // ระบบอนุภาคฝุ่นแสง (Ambient Dust Particles)
+  // ==========================================
+  const canvas = document.getElementById("particleCanvas");
+  const ctx = canvas.getContext("2d");
+  let particles = [];
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  window.addEventListener("resize", resizeCanvas);
+  resizeCanvas();
+
+  const particleCount = Math.min(45, Math.floor(window.innerWidth / 28));
+  for (let i = 0; i < particleCount; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      radius: Math.random() * 1.8 + 0.5,
+      speedY: (Math.random() - 0.5) * 0.35,
+      speedX: (Math.random() - 0.5) * 0.25,
+      alpha: Math.random() * 0.45 + 0.1,
+    });
+  }
+
+  function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach((p) => {
+      p.x += p.speedX;
+      p.y += p.speedY - scrollVelocity * 0.35;
+
+      if (p.x < 0) p.x = canvas.width;
+      if (p.x > canvas.width) p.x = 0;
+      if (p.y < 0) p.y = canvas.height;
+      if (p.y > canvas.height) p.y = 0;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 190, 140, ${p.alpha})`;
+      ctx.fill();
+    });
+
+    scrollVelocity *= 0.92;
+    requestAnimationFrame(animateParticles);
+  }
+
+  animateParticles();
+
+  // ==========================================
+  // ระบบขยายภาพเต็มจอ (Lightbox)
+  // ==========================================
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightboxImg");
+  const lightboxClose = document.getElementById("lightboxClose");
+
+  document.querySelectorAll(".frame-wrapper").forEach((wrapper) => {
+    wrapper.addEventListener("click", () => {
+      const src = wrapper.getAttribute("data-lightbox");
+      if (!src) return;
+      lightboxImg.src = src;
+      lightbox.classList.add("is-open");
+      lightbox.setAttribute("aria-hidden", "false");
+    });
+  });
+
+  function closeLightbox() {
+    lightbox.classList.remove("is-open");
+    lightbox.setAttribute("aria-hidden", "true");
+  }
+
+  lightboxClose.addEventListener("click", closeLightbox);
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeLightbox();
+  });
+
+  // ==========================================
+  // ปุ่มคัดลอกข้อความ และปุ่มเลื่อนกลับด้านบน
+  // ==========================================
+  const copyBtn = document.getElementById("copyBtn");
+  const copyBtnText = document.getElementById("copyBtnText");
+  const fullQuoteText = document.getElementById("fullQuoteText");
+  const topBtn = document.getElementById("topBtn");
+
+  copyBtn.addEventListener("click", async () => {
+    const cleanText = fullQuoteText.textContent.trim();
     try {
-        const response = await (await fetch(API_URL, requestOptions)).json();
-        pElement.textContent = response.choices[0].text.trim();
-    } catch (error) { // Add error class to the paragraph element and set error text
-        pElement.classList.add("error");
-        pElement.textContent = "Oops! Something went wrong while retrieving the response. Please try again.";
+      await navigator.clipboard.writeText(cleanText);
+      copyBtnText.textContent = "คัดลอกเรียบร้อยแล้ว ✓";
+      setTimeout(() => {
+        copyBtnText.textContent = "คัดลอกข้อความ";
+      }, 2200);
+    } catch {
+      copyBtnText.textContent = "ไม่สามารถคัดลอกได้";
     }
-    // Remove the typing animation, append the paragraph element and save the chats to local storage
-    incomingChatDiv.querySelector(".typing-animation").remove();
-    incomingChatDiv.querySelector(".chat-details").appendChild(pElement);
-    localStorage.setItem("all-chats", chatContainer.innerHTML);
-    chatContainer.scrollTo(0, chatContainer.scrollHeight);
-}
-const copyResponse = (copyBtn) => {
-    // Copy the text content of the response to the clipboard
-    const reponseTextElement = copyBtn.parentElement.querySelector("p");
-    navigator.clipboard.writeText(reponseTextElement.textContent);
-    copyBtn.textContent = "done";
-    setTimeout(() => copyBtn.textContent = "content_copy", 1000);
-}
-const showTypingAnimation = () => {
-    // Display the typing animation and call the getChatResponse function
-    const html = `<div class="chat-content">
-                    <div class="chat-details">
-                        <img src="images/chatbot.jpg" alt="chatbot-img">
-                        <div class="typing-animation">
-                            <div class="typing-dot" style="--delay: 0.2s"></div>
-                            <div class="typing-dot" style="--delay: 0.3s"></div>
-                            <div class="typing-dot" style="--delay: 0.4s"></div>
-                        </div>
-                    </div>
-                    <span onclick="copyResponse(this)" class="material-symbols-rounded">content_copy</span>
-                </div>`;
-    // Create an incoming chat div with typing animation and append it to chat container
-    const incomingChatDiv = createChatElement(html, "incoming");
-    chatContainer.appendChild(incomingChatDiv);
-    chatContainer.scrollTo(0, chatContainer.scrollHeight);
-    getChatResponse(incomingChatDiv);
-}
-const handleOutgoingChat = () => {
-    userText = chatInput.value.trim(); // Get chatInput value and remove extra spaces
-    if(!userText) return; // If chatInput is empty return from here
-    // Clear the input field and reset its height
-    chatInput.value = "";
-    chatInput.style.height = `${initialInputHeight}px`;
-    const html = `<div class="chat-content">
-                    <div class="chat-details">
-                        <img src="images/user.jpg" alt="user-img">
-                        <p>${userText}</p>
-                    </div>
-                </div>`;
-    // Create an outgoing chat div with user's message and append it to chat container
-    const outgoingChatDiv = createChatElement(html, "outgoing");
-    chatContainer.querySelector(".default-text")?.remove();
-    chatContainer.appendChild(outgoingChatDiv);
-    chatContainer.scrollTo(0, chatContainer.scrollHeight);
-    setTimeout(showTypingAnimation, 500);
-}
-deleteButton.addEventListener("click", () => {
-    // Remove the chats from local storage and call loadDataFromLocalstorage function
-    if(confirm("Are you sure you want to delete all the chats?")) {
-        localStorage.removeItem("all-chats");
-        loadDataFromLocalstorage();
-    }
+  });
+
+  topBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
 });
-themeButton.addEventListener("click", () => {
-    // Toggle body's class for the theme mode and save the updated theme to the local storage 
-    document.body.classList.toggle("light-mode");
-    localStorage.setItem("themeColor", themeButton.innerText);
-    themeButton.innerText = document.body.classList.contains("light-mode") ? "dark_mode" : "light_mode";
-});
-const initialInputHeight = chatInput.scrollHeight;
-chatInput.addEventListener("input", () => {   
-    // Adjust the height of the input field dynamically based on its content
-    chatInput.style.height =  `${initialInputHeight}px`;
-    chatInput.style.height = `${chatInput.scrollHeight}px`;
-});
-chatInput.addEventListener("keydown", (e) => {
-    // If the Enter key is pressed without Shift and the window width is larger 
-    // than 800 pixels, handle the outgoing chat
-    if (e.key === "Enter" && !e.shiftKey && window.innerWidth > 800) {
-        e.preventDefault();
-        handleOutgoingChat();
-    }
-});
-loadDataFromLocalstorage();
-sendButton.addEventListener("click", handleOutgoingChat);
